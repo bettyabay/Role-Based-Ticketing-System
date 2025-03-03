@@ -1,11 +1,29 @@
-const express = require('express');
-const router = express.Router();
-const ticketController = require('../controllers/ticketController');
-const authMiddleware = require('../middleware/authMiddleware');
+const express = require('express')
+const router = express.Router()
+const {
+  getTickets,
+  getTicket,
+  createTicket,
+  updateTicket,
+  deleteTicket
+} = require('../controllers/ticketController')
 
-router.post('/', authMiddleware, ticketController.createTicket);
-router.get('/', authMiddleware, ticketController.getAllTickets);
-router.get('/:id', authMiddleware, ticketController.getTicketById);
-router.put('/:id', authMiddleware, ticketController.updateTicket);
+const { protect } = require('../middleware/authMiddleware')
 
-module.exports = router;
+// Re-route into note router
+const noteRouter = require('./noteRoutes')
+router.use('/:ticketId/notes', noteRouter)
+
+// Protected route to create the ticket
+router
+  .route('/')
+  .get(protect, getTickets)
+  .post(protect, createTicket)
+
+router
+  .route('/:id')
+  .get(protect, getTicket)
+  .delete(protect, deleteTicket)
+  .put(protect, updateTicket)
+
+module.exports = router
