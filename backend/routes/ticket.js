@@ -6,9 +6,9 @@ const {
   createTicket,
   updateTicket,
   deleteTicket
-} = require('../controllers/ticketController')
+} = require('../../controllers/ticketController')
 
-const { protect } = require('../middleware/authMiddleware')
+const { protect } = require('../../middleware/authMiddleware')
 
 // Re-route into note router
 const noteRouter = require('./noteRoutes')
