@@ -1,0 +1,30 @@
+{
+  "name": "role-based-ticketing-system",
+  "version": "1.0.0",
+  "description": "This project is a basic role-based support ticketing system developed using Node.js for the backend and React.js for the frontend. The application features user authentication with JWT, allowing users to create and manage support tickets based on their roles.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bettyabay/Role-Based-Ticketing-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bettyabay/Role-Based-Ticketing-System/issues"
+  },
+  "homepage": "https://github.com/bettyabay/Role-Based-Ticketing-System#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
