@@ -4,9 +4,9 @@ const {
   registerUser,
   loginUser,
   getMe
-} = require('../../controllers/userController')
+} = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/controllers/userController.js')
 
-const { protect } = require('../../middleware/authMiddleware')
+const { protect } = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/middleware/authMiddleware.js')
 
 router.post('/', registerUser)
 

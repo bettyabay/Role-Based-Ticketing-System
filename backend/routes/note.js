@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router({ mergeParams: true })
-const { getNotes, addNote } = require('../../controllers/noteController')
+const { getNotes, addNote } = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/controllers/noteController.js')
 
-const { protect } = require('../../middleware/authMiddleware')
+const { protect } = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/middleware/authMiddleware.js')
 
 router
   .route('/')

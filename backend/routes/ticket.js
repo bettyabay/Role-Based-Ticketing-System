@@ -6,12 +6,12 @@ const {
   createTicket,
   updateTicket,
   deleteTicket
-} = require('../../controllers/ticketController')
+} = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/controllers/ticketController.js')
 
-const { protect } = require('../../middleware/authMiddleware')
+const { protect } = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/middleware/authMiddleware.js')
 
 // Re-route into note router
-const noteRouter = require('./noteRoutes')
+const noteRouter = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/routes/note.js')
 router.use('/:ticketId/notes', noteRouter)
 
 // Protected route to create the ticket

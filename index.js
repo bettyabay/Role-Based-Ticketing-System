@@ -1,13 +1,16 @@
 const express = require('express') // commonjs module syntax
 const colors = require('colors')
 const dotenv = require('dotenv').config()
-const { errorHandler } = require('./middleware/errorMiddleware')
-const connectDB = require('./config/db')
+const { errorHandler } = require('./backend/middleware/errorMiddleware')
+const connectDB = require('./backend/config/db')
 const path = require('path')
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 
 // Connect to database
-connectDB()
+connectDB().catch(err => {
+  console.error(`Database connection error: ${err.message}`.red)
+  process.exit(1) // Exit process with failure
+})
 
 const app = express()
 
@@ -30,8 +33,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // Routes endpoints
-app.use('/api/users', require('./backend/routes/userRoutes'))
-app.use('/api/tickets', require('./backend/routes/ticketRoutes'))
+app.use('/api/users', require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/routes/user.js'))
+app.use('/api/tickets', require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/routes/ticket.js'))
 
 // Serve Frontend
 if (process.env.NODE_ENV === 'production') {
@@ -52,8 +55,8 @@ app.use(errorHandler)
 /**
  * app.listen()
  * Starts a UNIX socket and listens for connections on the given path.
- * This method is identical to Node’s http.Server.listen().
+ * This method is identical to Node's http.Server.listen().
  */
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
+  console.log(`Server is running on port ${PORT}`.green)
 })

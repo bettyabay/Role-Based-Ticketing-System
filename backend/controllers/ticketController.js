@@ -1,103 +1,158 @@
-const asyncHandler = require('express-async-handler') // Simple middleware for handling exceptions inside of async express routes and passing them to your express error handlers.
-const jwt = require('jsonwebtoken') // JSON Web Token for authentication and authorization
-const bcrypt = require('bcryptjs') // A library to help you hash passwords.
+const asyncHandler = require('express-async-handler')
 
-const User = require('../models/userModel')
+const User = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/models/userModel.js')
+const Ticket = require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/models/ticketModel.js')
 
-// @desc    Register a new user
-// @route   /api/users
-// @access  Public
+// @desc    Get user tickets
+// @route   GET /api/tickets
+// @access  Private
 
 /**
  * 'asyncHandler' is a simple middleware for handling exceptions
  * inside of async express routes and passing them to your express
  * error handlers.
  */
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body // destructure the request body params
+const getTickets = asyncHandler(async (req, res) => {
+  // Get user using the id and JWT
+  const user = await User.findById(req.user.id)
 
-  // Validation
-  if (!name || !email || !password) {
-    res.status(400)
-    throw new Error('Please provide all required fields')
+  if (!user) {
+    res.status(401)
+    throw new Error('User not found')
   }
 
-  // Check for existing user
-  const userExists = await User.findOne({ email })
+  const tickets = await Ticket.find({ user: req.user._id })
 
-  if (userExists) {
-    res.status(400)
-    throw new Error('User already exists')
-  }
-
-  // Hash password
-  const salt = await bcrypt.genSalt(10) // 10 is the number of rounds
-  const hashedPassword = await bcrypt.hash(password, salt) // hash the password
-
-  // Create user
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword
-  })
-
-  // User is created
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id)
-    })
-  } else {
-    res.status(400)
-    throw new Error('User could not be created')
-  }
+  res.status(200).json(tickets)
 })
 
-// @desc    Login a user
-// @route   /api/users/login
-// @access  Public
-const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body // destructuring
-
-  const user = await User.findOne({ email })
-
-  // Check User and Password match
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id)
-    })
-  } else {
-    res.status(401) // Unauthorized
-    throw new Error('Invalid credentials')
-  }
-})
-
-// @desc    Get current user
-// @route   /api/users/me
+// @desc    Get user ticket
+// @route   GET /api/tickets/:id
 // @access  Private
-const getMe = asyncHandler(async (req, res) => {
-  const user = {
-    id: req.user._id,
-    email: req.user.email,
-    name: req.user.name
+const getTicket = asyncHandler(async (req, res) => {
+  // Get user using the id and JWT
+  const user = await User.findById(req.user.id)
+
+  if (!user) {
+    res.status(401)
+    throw new Error('User not found')
   }
-  res.status(200).json(user)
+
+  const ticket = await Ticket.findById(req.params.id)
+
+  if (!ticket) {
+    res.status(404)
+    throw new Error('Ticket not found')
+  }
+
+  // Check if ticket belongs to user
+  if (ticket.user.toString() !== req.user.id) {
+    res.status(401)
+    throw new Error('Not authorized')
+  }
+
+  res.status(200).json(ticket)
 })
 
-// Generate token
-generateToken = id => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d'
+// @desc    Create new ticket
+// @route   POST /api/ticket
+// @access  Private
+const createTicket = asyncHandler(async (req, res) => {
+  const { product, description } = req.body
+
+  if (!product || !description) {
+    res.status(400) // Bad request
+    throw new Error('Please provide a product and description')
+  }
+
+  // Get user using the id and JWT
+  const user = await User.findById(req.user.id)
+
+  if (!user) {
+    res.status(401)
+    throw new Error('User not found')
+  }
+
+  const ticket = await Ticket.create({
+    product,
+    description,
+    user: req.user.id,
+    status: 'new'
   })
-}
+
+  res.status(201).json(ticket)
+})
+
+// @desc    Delete ticket
+// @route   DELETE /api/tickets/:id
+// @access  Private
+const deleteTicket = asyncHandler(async (req, res) => {
+  // Get user using the id and JWT
+  const user = await User.findById(req.user.id)
+
+  if (!user) {
+    res.status(401)
+    throw new Error('User not found')
+  }
+
+  const ticket = await Ticket.findById(req.params.id)
+
+  if (!ticket) {
+    res.status(404)
+    throw new Error('Ticket not found')
+  }
+
+  // Check if ticket belongs to user
+  if (ticket.user.toString() !== req.user.id) {
+    res.status(401)
+    throw new Error('Not authorized')
+  }
+
+  await ticket.remove()
+
+  res.status(200).json({ success: true })
+})
+
+// @desc    Update ticket
+// @route   PUT /api/tickets/:id
+// @access  Private
+const updateTicket = asyncHandler(async (req, res) => {
+  // Get user using the id and JWT
+  const user = await User.findById(req.user.id)
+
+  if (!user) {
+    res.status(401)
+    throw new Error('User not found')
+  }
+
+  const ticket = await Ticket.findById(req.params.id)
+
+  if (!ticket) {
+    res.status(404)
+    throw new Error('Ticket not found')
+  }
+
+  // Check if ticket belongs to user
+  if (ticket.user.toString() !== req.user.id) {
+    res.status(401)
+    throw new Error('Not authorized')
+  }
+
+  const updatedTicket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true
+    }
+  )
+
+  res.status(200).json(updatedTicket)
+})
 
 module.exports = {
-  registerUser,
-  loginUser,
-  getMe
+  getTickets,
+  createTicket,
+  getTicket,
+  deleteTicket,
+  updateTicket
 }
