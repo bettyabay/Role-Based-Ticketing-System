@@ -5,12 +5,10 @@ const { errorHandler } = require('./backend/middleware/errorMiddleware')
 const connectDB = require('./backend/config/db')
 const path = require('path')
 const PORT = process.env.PORT || 5000
+const mongoose = require('mongoose')
 
 // Connect to database
-connectDB().catch(err => {
-  console.error(`Database connection error: ${err.message}`.red)
-  process.exit(1) // Exit process with failure
-})
+connectDB() // Call connectDB once
 
 const app = express()
 
@@ -33,8 +31,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // Routes endpoints
-app.use('/api/users', require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/routes/user.js'))
-app.use('/api/tickets', require('C:/Users/USER/Desktop/Role-Based-Ticketing-System/backend/routes/ticket.js'))
+app.use('/api/users', require('./backend/routes/user'))
+app.use('/api/tickets', require('./backend/routes/ticket'))
 
 // Serve Frontend
 if (process.env.NODE_ENV === 'production') {
