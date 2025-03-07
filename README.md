@@ -180,30 +180,3 @@ npm run build
 ```
 
 This will produce an optimized build of your application in `build` folder.
-
-### Deploy your application
-
-In order to produce a ready-to-deploy version of your application to deploy to Heroku:
-
-```sh
-npm run deploy
-```
-
-This will produce a ready-to-deploy version of your application in `deploy` folder. 
-Now you can deploy your application by running few handful commands:
-
-```sh
-cd deploy
-heroku login
-git init
-git add *
-git commit -m "deploying my-app"
-heroku create my-app
-git push heroku master
-```
-And within a few seconds, your application will be live at [https://support-desk-mern-arifmd.herokuapp.com/](https://support-desk-mern-arifmd.herokuapp.com/).
-
-
-## Author(s)
-
-- **Mohammad Arif** - [mdarif](https://github.com/mdarif)
