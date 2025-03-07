@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Switch } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Header from './components/Header'
@@ -9,8 +10,9 @@ import NewTicket from './pages/NewTicket'
 import Register from './pages/Register'
 import Tickets from './pages/Tickets'
 import Ticket from './pages/Ticket'
+import AdminDashboard from './components/adminDashboard'
 
-function App () {
+const App = () => {
   return (
     <>
       <Router>
@@ -29,6 +31,7 @@ function App () {
             <Route path='/ticket/:ticketId' element={<PrivateRoute />}>
               <Route path='/ticket/:ticketId' element={<Ticket />} />
             </Route>
+            <Route path='/admin' element={<AdminDashboard />} />
           </Routes>
         </div>
       </Router>

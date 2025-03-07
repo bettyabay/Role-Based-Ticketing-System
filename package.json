@@ -4,9 +4,10 @@
   "description": "This project is a basic role-based support ticketing system developed using Node.js for the backend and React.js for the frontend. The application features user authentication with JWT, allowing users to create and manage support tickets based on their roles.",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "dev": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "react-scripts test"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,8 @@
     "express-validator": "^7.2.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.0"
+    "mongoose": "^8.12.0",
+    "react-scripts": "^3.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
